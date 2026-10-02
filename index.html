@@ -1,1 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Azeem Rehman | Personal Portfolio</title>
+  <style>
+    /* ==========================================
+       1. BASE & PORTFOLIO STYLES
+       ========================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
+    body {
+      background-color: #f4f6f8;
+      color: #333;
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      background: #1B5E8C;
+      color: white;
+      padding: 1rem 0;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 15px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .hero h2 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: #1B5E8C;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .section {
+      background: white;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 24px;
+    }
+
+    .section h2 {
+      color: #1B5E8C;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 8px;
+    }
+
+    .skills-grid, .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .skill-card, .project-card {
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background: #fafafa;
+    }
+
+    .project-card h3 {
+      color: #1B5E8C;
+      margin-bottom: 8px;
+    }
+
+    /* ==========================================
+       2. AI CHATBOT WIDGET STYLES
+       ========================================== */
+    .chatbot-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background-color: #1B5E8C;
+      color: white;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      z-index: 1000;
+      transition: transform 0.3s ease;
+    }
+
+    .chatbot-toggle.active {
+      transform: rotate(90deg);
+    }
+
+    .chatbot-window {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 360px;
+      height: 480px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      display: none;
+      flex-direction: column;
+      z-index: 999;
+      overflow: hidden;
+    }
+
+    .chatbot-window.active {
+      display: flex;
+    }
+
+    .chatbot-header {
+      background: #1B5E8C;
+      color: white;
+      padding: 14px 16px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chatbot-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .chatbot-chips {
+      display: flex;
+      gap: 6px;
+      padding: 8px 12px;
+      background: #f1f5f9;
+      overflow-x: auto;
+    }
+
+    .chatbot-chips button {
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .chatbot-messages {
+      flex-grow: 1;
+      padding: 12px;
+      background: #f9fafb;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chatbot-msg {
+      padding: 10px 14px;
+      border-radius: 16px;
+      max-width: 85%;
+      font-size: 14px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    .user-msg {
+      background: #1B5E8C;
+      color: white;
+      align-self: flex-end;
+    }
+
+    .bot-msg {
+      background: white;
+      color: #333;
+      align-self: flex-start;
+      border: 1px solid #e2e8f0;
+    }
+
+    .chatbot-typing {
+      display: none;
+      align-self: flex-start;
+      padding: 10px;
+      background: white;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      gap: 4px;
+    }
+
+    .chatbot-typing span {
+      width: 6px;
+      height: 6px;
+      background: #94a3b8;
+      border-radius: 50%;
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+
+    .chatbot-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .chatbot-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-6px); }
+    }
+
+    .chatbot-input {
+      display: flex;
+      padding: 10px;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      gap: 8px;
+    }
+
+    .chatbot-input input {
+      flex-grow: 1;
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 20px;
+      outline: none;
+    }
+
+    .chatbot-input button {
+      background: #1B5E8C;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    @media (max-width: 500px) {
+      .chatbot-window {
+        width: calc(100% - 16px);
+        right: 8px;
+        bottom: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header>
+    <nav class="container navbar">
+      <h1 class="logo">Azeem Rehman</h1>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero container">
+    <h2>Hi, I'm Azeem Rehman</h2>
+    <p>Student Leader, Full-Stack Developer & AI Enthusiast</p>
+    <a href="#projects" class="btn">View My Work</a>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="container section">
+    <h2>About Me</h2>
+    <p>I am a dedicated web developer and high-achieving student with leadership experience as a Class Representative. I actively participate in Model United Nations (MUN) and love building web applications using modern technologies.</p>
+  </section>
+
+  <!-- Skills Section -->
+  <section id="skills" class="container section">
+    <h2>Skills</h2>
+    <div class="skills-grid">
+      <div class="skill-card">HTML5 & CSS3</div>
+      <div class="skill-card">JavaScript (ES6+)</div>
+      <div class="skill-card">Node.js</div>
+      <div class="skill-card">Git & GitHub</div>
+      <div class="skill-card">Vercel Deployment</div>
+      <div class="skill-card">AI API Integration</div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section id="projects" class="container section">
+    <h2>Projects</h2>
+    <div class="projects-grid">
+      <div class="project-card">
+        <h3>Personal Web Portfolio</h3>
+        <p>Interactive web portfolio built with full-stack functionality, hosting, and custom AI prompt implementations.</p>
+      </div>
+      <div class="project-card">
+        <h3>HEAVEN STORE</h3>
+        <p>An e-commerce website concept and prompt architecture design for automated web interactions.</p>
+      </div>
+      <div class="project-card">
+        <h3>LEAPS Internship Project</h3>
+        <p>Managed social media project deliverables, reels, carousels, and timeline management.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="container section">
+    <h2>Contact</h2>
+    <p>Let's connect! Feel free to reach out via email or LinkedIn.</p>
+    <a href="mailto:contact@example.com" class="btn">Send Email</a>
+  </section>
+
+  <!-- AI Chatbot Floating Widget -->
+  <button class="chatbot-toggle" id="chatbotToggle" onclick="toggleChatbot()">💬</button>
+
+  <div class="chatbot-window" id="chatbotWindow">
+    <div class="chatbot-header">
+      <span>Ask My Portfolio AI</span>
+      <button class="chatbot-close" onclick="toggleChatbot()">&times;</button>
+    </div>
+
+    <!-- Quick Question Chips -->
+    <div class="chatbot-chips">
+      <button onclick="sendQuickChip('What projects have you built?')">Projects?</button>
+      <button onclick="sendQuickChip('What are your top skills?')">Skills?</button>
+      <button onclick="sendQuickChip('Tell me about your background.')">About?</button>
+    </div>
+
+    <div class="chatbot-messages" id="chatbot-messages">
+      <div class="chatbot-msg bot-msg">Hi! Ask me anything about Azeem's skills, experience, or projects.</div>
+      <div class="chatbot-typing" id="chatbot-typing">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="chatbot-input">
+      <input type="text" id="chatbot-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendChatbotMessage()">
+      <button onclick="sendChatbotMessage()">Send</button>
+    </div>
+  </div>
+
+  <!-- JavaScript Functionality -->
+  <script>
+    let conversationHistory = [];
+
+    const SYSTEM_PROMPT = `You are the personal portfolio AI assistant for Azeem Rehman. You represent Azeem, who is an active student with strong academic standing, a Class Representative, and a web developer proficient in HTML, CSS, JavaScript, Node.js, and AI development.
+
+Key Details & Experience:
+- Background: High achiever and student leader (Class Representative).
+- Interests & Leadership: Model United Nations (MUN) participant.
+- Skills: HTML5, CSS3, JavaScript (ES6+), Web Design, Git/GitHub, Vercel deployment, and AI API integration.
+- Projects:
+  1. Personal Web Portfolio: Interactive web portfolio showcasing web development skills and custom AI prompt implementations.
+  2. HEAVEN STORE: E-commerce website concept and prompt architecture design.
+  3. LEAPS Internship Project: Managed social media deliverables, reels, and project timelines.
+
+Persona & Tone Rules:
+- Speak about Azeem in the third person ("Azeem is...", "Azeem built...").
+- Maintain a polite, concise, professional, and helpful tone. Keep responses under 3 sentences.
+
+Boundaries:
+- Do NOT share private contact info, personal passwords, or financial data.
+- Refuse to answer off-topic queries or provide homework help on unrelated subjects. Politely redirect back to Azeem's skills, experience, and projects.
+
+Closing Nudge:
+- Always encourage visitors to connect with Azeem directly via email or LinkedIn for follow-ups.`;
+
+    function toggleChatbot() {
+      const windowEl = document.getElementById("chatbotWindow");
+      const toggleBtn = document.getElementById("chatbotToggle");
+      windowEl.classList.toggle("active");
+      toggleBtn.classList.toggle("active");
+    }
+
+    function sendQuickChip(text) {
+      document.getElementById("chatbot-input").value = text;
+      sendChatbotMessage();
+    }
+
+    async function sendChatbotMessage() {
+      const inputEl = document.getElementById("chatbot-input");
+      const messagesDiv = document.getElementById("chatbot-messages");
+      const typingIndicator = document.getElementById("chatbot-typing");
+
+      const messageText = inputEl.value.trim();
+      if (!messageText) return;
+
+      // Add User Message
+      const userMsgDiv = document.createElement("div");
+      userMsgDiv.className = "chatbot-msg user-msg";
+      userMsgDiv.textContent = messageText;
+      messagesDiv.insertBefore(userMsgDiv, typingIndicator);
+
+      inputEl.value = "";
+      typingIndicator.style.display = "flex";
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+      // Add to History
+      conversationHistory.push({
+        role: "user",
+        parts: [{ text: messageText }]
+      });
+
+      try {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            systemPrompt: SYSTEM_PROMPT,
+            contents: conversationHistory
+          })
+        });
+
+        const responseText = await res.text();
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (e) {
+          throw new Error("Invalid response from server");
+        }
+
+        if (!res.ok) {
+          throw new Error((data && data.error) || "API Request Failed");
+        }
+
+        const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't process that.";
+
+        // Save Bot Reply to History
+        conversationHistory.push({
+          role: "model",
+          parts: [{ text: aiReply }]
+        });
+
+        // Display Bot Message
+        const botMsgDiv = document.createElement("div");
+        botMsgDiv.className = "chatbot-msg bot-msg";
+        botMsgDiv.textContent = aiReply;
+        messagesDiv.insertBefore(botMsgDiv, typingIndicator);
+
+      } catch (err) {
+        const errorDiv = document.createElement("div");
+        errorDiv.className = "chatbot-msg bot-msg";
+        errorDiv.style.color = "red";
+        errorDiv.textContent = "Error: " + err.message;
+        messagesDiv.insertBefore(errorDiv, typingIndicator);
+      } finally {
+        typingIndicator.style.display = "none";
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
+    }
+  </script>
+</body>
+</html>
